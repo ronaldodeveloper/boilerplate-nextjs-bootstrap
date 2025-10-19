@@ -10,6 +10,8 @@ npm run dev
 
 ## Tecnologias / Dependências  do projeto
 
+```
+
 [x] typescript         // tipagem e segurança de código
 [x] react-bootstrap    // UI pronta
 [x] sass               // pré-processador CSS
@@ -18,3 +20,5 @@ npm run dev
 [ ] swiper-slide       // carrosséis modernos
 [ ] framer-motion      // animação
 [ ] react-hook-form    // formulários
+
+```
