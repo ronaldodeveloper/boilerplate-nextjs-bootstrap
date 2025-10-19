@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-Iniciar projeto local
+Iniciar servido
 ```bash
 npm run dev
 
