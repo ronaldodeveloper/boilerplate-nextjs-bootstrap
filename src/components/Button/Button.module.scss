@@ -1,0 +1,55 @@
+.button{
+    padding: 0 24px;
+    height: 40px;
+    border-radius: 25px;
+    background-color: $color-primary;
+    color: white;
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s linear;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    // min-width: 130px;
+
+    &.buttonIconOnly{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 0;
+        // min-width: auto;
+        background-color: red;
+    }
+
+    &:hover{
+        background-color:  darken($color-primary, 10%);
+        color: white;
+    }
+
+    // &.outline-white{
+    //      background-color: white;
+    //      border: 1px solid $color-light-gray;
+    //      color: $color-gray;
+    //      min-width: auto;
+
+    //      &:hover{
+    //         background-color:  $color-primary;
+    //         border-color: $color-primary;
+    //         color: white;
+    //      }
+    // }
+    span{
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    &:disabled{
+        background-color: rgb(183, 183, 183);
+    }
+}

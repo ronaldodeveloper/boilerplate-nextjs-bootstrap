@@ -1,0 +1,22 @@
+body{
+//   background-color: #141414;
+  color: $color-primary;
+  font-family: "DM Sans", 'DM Sans Fallback', sans-serif;
+  font-size: 16px;
+}
+
+
+// container main
+.container {
+   width: 100%;
+   margin-left: auto;
+   margin-right: auto;
+   padding: 0 16px;
+
+   @media (min-width: $mobile) {
+      padding: 0 24px;
+   }
+   @media (min-width: $desktopHD) {
+      max-width: 1280px;
+   }
+}

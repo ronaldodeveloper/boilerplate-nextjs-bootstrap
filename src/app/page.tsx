@@ -1,95 +1,136 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import React, { useState, useEffect } from 'react'
+import styles from "./page.module.scss";
+import { useWindowSize } from './../hooks/useWindowSize';
+import { FormatMoney } from '@/util';
+import { apiClient } from './../services';
+import axios from 'axios';
+
+
+type UsersFake = {
+    accountLogin: string
+    availableQuantity: number
+    createdAt: string
+    loyaltyProgram: string
+    offerId: string
+    offerStatus: "Ativa" | "Inativo" | "Em Utilizacao";
+    offerType: string
+}
+
+
+type Products = {
+      productId: number,
+      quantity: number
+}
+
+type Carts = {
+  id: number,
+  userId: number,
+  date: string | Date,
+  products: Products[],
+  __v: number
+}
+
+
+type Product = {
+  id: number,
+  title: string,
+  price: number,
+  description: string,
+  category: string,
+  image: string
+}
+
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  // const [data, setData] = useState<UsersFake[]>([]);
+  // const [data, setData] = useState<Carts[]>([]);  
+
+  const [data, setData] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>('')
+  const { width, height } = useWindowSize();
+    
+  // useEffect(() => {
+  //     const url = 'https://fakestoreapi.com/carts';
+  //     const fetchData = async () => {
+  //       try {
+  //         const res = await fetch(`${url}`, { cache: "no-store" })
+  //         if (!res.ok) {
+  //           throw new Error(`HTTP error! status: ${res.status}`)
+  //         }
+  //         const result = await res.json()  
+  //         setData(result)
+  //       } catch (err) {
+  //         console.error('Fetch error:', err)
+  //         setError('Failed to load ranking simulation')
+  //       } finally {
+  //         setLoading(false)
+  //       }
+  //     }
+  //     fetchData()
+  //   }, [])
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+        const response = await apiClient.get('/products', {
+          signal: controller.signal,
+        })
+        setData(response.data)
+
+      } catch (err: any) {
+        if (err.name === 'AbortError' || axios.isCancel(err)) {
+          console.log('Fetch aborted');
+          return;
+        }
+        setError('Failed to load ranking simulation');
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+     return () => {
+      controller.abort();
+    };
+  }, [])
+
+    // console.log()
+
+
+  return (
+    <main className={`${styles.home} container`}>
+     <h1>Home Page</h1>
+     <table className='table'>
+      <thead>
+        <tr>
+          <th style={{width: '250px'}}>product</th>
+          <th style={{width: '100px'}}>price</th>
+          <th style={{width: '150px'}}>category</th>
+          <th >description</th>
+        </tr>
+      </thead>
+      <tbody>
+{
+       data.length > 0 && data.map((item,index)=>{
+        return(
+          <tr key={index}>
+            <td>{`${item.title}`}</td>
+            <td>{`${FormatMoney(item.price)}`}</td>
+            <td>{`${item.category}`}</td>            
+            <td>{`${item.description}`}</td>
+          </tr>
+        )
+       })
+     }
+      </tbody>
+     </table>
+
+     
+   
+    </main>
   );
 }
